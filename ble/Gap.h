@@ -908,12 +908,27 @@ public:
     void onConnection(T *tptr, void (T::*mptr)(const ConnectionCallbackParams_t*)) {connectionCallChain.add(tptr, mptr);}
 
     /**
+     * Remove all functions previously registered with onConnection from the connection callback chain.
+     * @todo add value semantic to FunctionPointerWithContext which will make possible to 
+     * remove a specific callback from the chain.
+     */
+    void removeAllOnConnectionCallbacks() { connectionCallChain.clear(); }
+
+    /**
      * Append to a chain of callbacks to be invoked upon GAP disconnection.
      */
     void onDisconnection(DisconnectionEventCallback_t callback) {disconnectionCallChain.add(callback);}
 
     template<typename T>
     void onDisconnection(T *tptr, void (T::*mptr)(const DisconnectionCallbackParams_t*)) {disconnectionCallChain.add(tptr, mptr);}
+
+    /**
+     * Remove all functions previously registered with onDisconnection from the disconnection callback chain.
+     * @todo add value semantic to FunctionPointerWithContext which will make possible to 
+     * remove a specific callback from the chain.
+     */
+    void removeAllOnDisconnectionCallbacks() { disconnectionCallChain.clear(); }
+
 
     /**
      * Set the application callback for radio-notification events.
