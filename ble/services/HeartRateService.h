@@ -86,6 +86,11 @@ public:
     }
 
     /**
+     * non trivial and virtual destructor 
+     */
+    virtual ~HeartRateService() { }
+
+    /**
      * @brief Set a new 8-bit value for heart rate.
      *
      * @param[in] hrmCounter
