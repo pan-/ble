@@ -30,6 +30,9 @@
 class DiscoveredCharacteristicDescriptor {
 
 public:
+
+    const uint16_t CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = 0x2902;
+
     DiscoveredCharacteristicDescriptor(
         GattClient* client, Gap::Handle_t connectionHandle,  GattAttribute::Handle_t gattHandle, const UUID& uuid) : 
         _client(client), _connectionHandle(connectionHandle), _uuid(uuid), _gattHandle(gattHandle) {

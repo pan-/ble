@@ -313,7 +313,7 @@ public:
         (void) characteristic;
         return false; /* Requesting action from porter(s): override this API if this capability is supported. */
     }
-
+    
     /**
      * Terminate an ongoing characteristic descriptor discovery. This should result 
      * in an invocation of the TerminationCallback if characteristic descriptor discovery is active.

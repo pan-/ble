@@ -68,6 +68,40 @@ public:
         operator unsigned() const; /* Disallow implicit conversion into an integer. */
     };
 
+    struct SubscriptionFlags_t { 
+        SubscriptionFlags_t(bool notify, bool indicate) :
+            _notify(notify), _indicate(indicate) { 
+        }
+
+        bool notify() const { return _notify; }               /**< subscription to notification */
+        bool indicate() const { return _indicate; }           /**< subscription to indication */
+
+        uint8_t serialize() { 
+            return (indicate() << 1) | (notify() << 0);
+        }
+
+        friend bool operator==(SubscriptionFlags_t rhs, SubscriptionFlags_t lhs) {
+            return rhs._notify == lhs._notify &&
+                   rhs._indicate == lhs._indicate;
+        }
+
+        friend bool operator!=(SubscriptionFlags_t rhs, SubscriptionFlags_t lhs) { 
+            return !(rhs == lhs);
+        }
+
+    private:
+        uint8_t _notify:1;
+        uint8_t _indicate:1;
+    };
+
+    struct SubscriptionCallbackParams_t {
+        const DiscoveredCharacteristic& characteristic;
+        ble_error_t status;
+        SubscriptionFlags_t operation;
+    };
+
+    typedef FunctionPointerWithContext<const SubscriptionCallbackParams_t*> SubscriptionCallback_t;
+
     /**
      * Initiate (or continue) a read for the value attribute, optionally at a
      * given offset. If the characteristic or descriptor to be read is longer
@@ -113,6 +147,28 @@ public:
      */
     ble_error_t discoverDescriptors(const CharacteristicDescriptorDiscovery::DiscoveryCallback_t& onCharacteristicDiscovered, 
                                     const CharacteristicDescriptorDiscovery::TerminationCallback_t& onTermination) const;
+
+    /**
+     * @brief Set the subscription flags for this characteristic
+     * @details This is an asynchronous operation which can take some time.
+     * The operations involved are:
+     *    - Discover the CCCD (Client Characteristic Configuration Descriptor) 
+     *      of this characteristic
+     *    - Write the CCCD with the new values provided
+     * 
+     * @param flags Two type of subscriptions are available: 
+     *   - notification: A server can notify a client that a characteristic has 
+     *   changed and provide the new value. If the notification flag is enabled
+     *   and the server send a notification, the notification will be available 
+     *   through GattClient::onHVX registered callback. Notifications are reliable.
+     *   - indication: same as above except that an indication is **not** reliable.
+     *   
+     * @param callback The callback called when the operation end.
+     * 
+     * @return BLE_ERROR_NONE if the operation has been launched successfully; 
+     * else an appropriate error.
+     */
+    ble_error_t setSubscriptionFlags(SubscriptionFlags_t flags, const SubscriptionCallback_t& callback);
 
     /**
      * Perform a write procedure.
