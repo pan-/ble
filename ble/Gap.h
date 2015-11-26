@@ -140,14 +140,14 @@ public:
         return (durationInMillis * 1000) / UNIT_1_25_MS;
     }
 
-    typedef FunctionPointerWithContext<TimeoutSource_t> TimeoutEventCallback_t;
     typedef CallChainOfFunctionPointersWithContext<TimeoutSource_t> TimeoutEventCallbackChain_t;
+    typedef TimeoutEventCallbackChain_t::Function_t TimeoutEventCallback_t;
 
-    typedef FunctionPointerWithContext<const ConnectionCallbackParams_t *> ConnectionEventCallback_t;
     typedef CallChainOfFunctionPointersWithContext<const ConnectionCallbackParams_t *> ConnectionEventCallbackChain_t;
+    typedef ConnectionEventCallbackChain_t::Function_t ConnectionEventCallback_t;
 
-    typedef FunctionPointerWithContext<const DisconnectionCallbackParams_t*> DisconnectionEventCallback_t;
     typedef CallChainOfFunctionPointersWithContext<const DisconnectionCallbackParams_t*> DisconnectionEventCallbackChain_t;    
+    typedef DisconnectionEventCallbackChain_t::Function_t DisconnectionEventCallback_t;
 
     typedef FunctionPointerWithContext<bool> RadioNotificationEventCallback_t;
 

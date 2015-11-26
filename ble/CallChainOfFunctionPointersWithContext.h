@@ -61,7 +61,7 @@ class CallChainOfFunctionPointersWithContext : public SafeBool<CallChainOfFuncti
 public:
     typedef FunctionPointerWithContext<ContextType> *pFunctionPointerWithContext_t;
 
-    typedef FunctionPointerWithContext<ContextType> FunctionPointerWithContext_t;
+    typedef FunctionPointerWithContext<ContextType> Function_t;
 
 public:
     /** Create an empty chain.
@@ -104,7 +104,7 @@ public:
      *
      *  @param func The FunctionPointerWithContext to add.
      */
-    pFunctionPointerWithContext_t add(const FunctionPointerWithContext_t& func) {
+    pFunctionPointerWithContext_t add(const Function_t& func) {
         return common_add(new FunctionPointerWithContext<ContextType>(func));
     }
 
@@ -115,7 +115,7 @@ public:
      * 
      * @return true if a function pointer has been detached and false otherwise
      */ 
-    bool detach(const FunctionPointerWithContext_t& toDetach) { 
+    bool detach(const Function_t& toDetach) { 
         pFunctionPointerWithContext_t current = chainHead;
         pFunctionPointerWithContext_t previous = NULL;
 

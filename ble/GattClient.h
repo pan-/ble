@@ -27,19 +27,19 @@
 
 class GattClient {
 public:
-    typedef FunctionPointerWithContext<const GattReadCallbackParams*> ReadCallback_t;
     typedef CallChainOfFunctionPointersWithContext<const GattReadCallbackParams*> ReadCallbackChain_t;
+    typedef ReadCallbackChain_t::Function_t ReadCallback_t;
 
     enum WriteOp_t {
         GATT_OP_WRITE_REQ = 0x01,  /**< Write request. */
         GATT_OP_WRITE_CMD = 0x02,  /**< Write command. */
     };
 
-    typedef FunctionPointerWithContext<const GattWriteCallbackParams*> WriteCallback_t;
     typedef CallChainOfFunctionPointersWithContext<const GattWriteCallbackParams*> WriteCallbackChain_t;
+    typedef WriteCallbackChain_t::Function_t WriteCallback_t;
 
-    typedef FunctionPointerWithContext<const GattHVXCallbackParams*> HVXCallback_t;
     typedef CallChainOfFunctionPointersWithContext<const GattHVXCallbackParams*> HVXCallbackChain_t;
+    typedef HVXCallbackChain_t::Function_t HVXCallback_t;
 
     /*
      * The following functions are meant to be overridden in the platform-specific sub-class.

@@ -28,14 +28,14 @@ class GattServer {
 public:
 
     /* Event callback handlers. */
-    typedef FunctionPointerWithContext<unsigned> DataSentCallback_t;
     typedef CallChainOfFunctionPointersWithContext<unsigned> DataSentCallbackChain_t;
+    typedef DataSentCallbackChain_t::Function_t DataSentCallback_t;
 
-    typedef FunctionPointerWithContext<const GattWriteCallbackParams*> DataWrittenCallback_t;
     typedef CallChainOfFunctionPointersWithContext<const GattWriteCallbackParams*> DataWrittenCallbackChain_t;    
+    typedef DataWrittenCallbackChain_t::Function_t DataWrittenCallback_t;
 
-    typedef FunctionPointerWithContext<const GattReadCallbackParams*> DataReadCallback_t;
     typedef CallChainOfFunctionPointersWithContext<const GattReadCallbackParams *> DataReadCallbackChain_t;
+    typedef DataReadCallbackChain_t::Function_t DataReadCallback_t;
 
     typedef FunctionPointerWithContext<GattAttribute::Handle_t> EventCallback_t;
 
