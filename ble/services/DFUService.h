@@ -100,21 +100,26 @@ public:
      */
     virtual void onDataWritten(const GattWriteCallbackParams *params) {
         if (params->handle == controlPoint.getValueHandle()) {
-            /* At present, writing anything will do the trick - this needs to be improved. */
-            if (handoverCallback) {
-                handoverCallback();
-            }
-
-            // Call bootloader_start implicitly trough a event handler call
-            // it is a work around for bootloader_start not being public in sdk 8.1
-            ble_dfu_t p_dfu;
-            ble_dfu_evt_t p_evt;
-
-            p_dfu.conn_handle = params->connHandle;
-            p_evt.ble_dfu_evt_type = BLE_DFU_START;
-
-            dfu_app_on_dfu_evt(&p_dfu, &p_evt);
+            ble.gap().disconnect(params->connHandle, Gap::LOCAL_HOST_TERMINATED_CONNECTION);
+            ble.gap().onDisconnection(this, &DFUService::handControlOverBootloader);
         }
+    }
+
+    void handControlOverBootloader(const Gap::DisconnectionCallbackParams_t*) {
+        /* At present, writing anything will do the trick - this needs to be improved. */
+        if (handoverCallback) {
+            handoverCallback();
+        }
+
+        // Call bootloader_start implicitly trough a event handler call
+        // it is a work around for bootloader_start not being public in sdk 8.1
+        ble_dfu_t p_dfu;
+        ble_dfu_evt_t p_evt;
+
+        p_dfu.conn_handle = BLE_CONN_HANDLE_INVALID;
+        p_evt.ble_dfu_evt_type = BLE_DFU_START;
+
+        dfu_app_on_dfu_evt(&p_dfu, &p_evt);
     }
 
 protected:
@@ -124,7 +129,7 @@ protected:
 protected:
     BLE          &ble;
 
-    /**< Writing to the control characteristic triggers the handover to DFU 
+    /**< Writing to the control characteristic triggers the handover to DFU
       *  bootloader. At present, writing anything will do the trick - this needs
       *  to be improved. */
     WriteOnlyArrayGattCharacteristic<uint8_t, SIZEOF_CONTROL_BYTES> controlPoint;
